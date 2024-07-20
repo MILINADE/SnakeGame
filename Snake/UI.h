@@ -22,6 +22,83 @@ namespace Snake
 
 	struct Game;
 
+	struct PlayState
+	{
+		sf::Sprite numAppleUI;
+		sf::Sprite totalNumApplesSprite;
+		sf::Text numEatenAppleText;
+		sf::Text totalNumApplesText;
+		sf::Text timeToStartMove;
+		sf::Music playStateMusic;
+		sf::SoundBuffer coinUpBuffer;
+		sf::Sound coinUp;
+		sf::SoundBuffer endGameBuffer;
+		sf::Sound endGame;
+
+		void DrawPlayState(Game& game, sf::RenderWindow& window);
+	};
+
+	struct MainMenuState
+	{
+		sf::Music mainMenuMusic;
+
+		void DrawMainMenu(Game& game, sf::RenderWindow& window);
+	};
+
+	struct SettingsState
+	{
+		sf::Text settingsText;
+		std::vector <Button> settingsButtons;
+		sf::Text soundOntext;
+		sf::Text effectsOntext;
+
+		void DrawSettingsState(Game& game, sf::RenderWindow& window);
+	};
+
+	struct TableRecordState
+	{
+		sf::Text tableRecordsText;
+		std::vector <sf::Text> playerRecordText;
+
+		void DrawTableRecordState(Game& game, sf::RenderWindow& window);
+	};
+	struct QuestionNameState
+	{
+		sf::Text questionEnterPlayerNameText;
+		sf::RectangleShape questionEnterPlayerNameBox;
+		std::vector <Button> questionEnterNameButtons;
+
+		void DrawQuestionNameState(Game& game, sf::RenderWindow& window);
+	};
+
+	struct DifficultyState
+	{
+		sf::Text changeDifficultyLevelText;
+		std::vector <Button> difficultyLevelButtons;
+
+		void DrawDifficultyState(Game& game, sf::RenderWindow& window);
+	};
+
+	struct PauseState
+	{
+		void DrawPauseState(Game& game, sf::RenderWindow& window);
+	};
+
+	struct GameOver
+	{
+		void DrawGameOverState(Game& game, sf::RenderWindow& window);
+	};
+
+	struct EnterNameState
+	{
+		sf::RectangleShape enterNameBox;
+		sf::Text userEnteredText;
+		std::string enteredText;
+		sf::String playerName = "XYZ";
+
+		void DrawEnterNameState(Game& game, sf::RenderWindow& window);
+	};
+
 	struct GameUIData
 	{
 		sf::Font gameFont;
@@ -45,40 +122,15 @@ namespace Snake
 
 		sf::Texture wallTexture;
 
-		//Play state
-		sf::Sprite numAppleUI;
-		sf::Sprite totalNumApplesSprite;
-		sf::Text numEatenAppleText;
-		sf::Text totalNumApplesText;
-		sf::Text timeToStartMove;
-		sf::Music playStateMusic;
-		sf::SoundBuffer coinUpBuffer;
-		sf::Sound coinUp;
-		sf::SoundBuffer endGameBuffer;
-		sf::Sound endGame;
-
-		//Main menu
-		sf::Music mainMenuMusic;
-		//Settings
-		sf::Text settingsText;
-		std::vector <Button> settingsButtons;
-		sf::Text soundOntext;
-		sf::Text effectsOntext;
-		//Table record state
-		sf::Text tableRecordsText;
-		std::vector <sf::Text> playerRecordText;
-		//Question name state
-		sf::Text questionEnterPlayerNameText;
-		sf::RectangleShape questionEnterPlayerNameBox;
-		std::vector <Button> questionEnterNameButtons;
-		//Enter name state
-		sf::RectangleShape enterNameBox;
-		sf::Text userEnteredText;
-		std::string enteredText;
-		sf::String playerName = "XYZ";
-		//Difficulty level state
-		sf::Text changeDifficultyLevelText;
-		std::vector <Button> difficultyLevelButtons;
+		PlayState playState;
+		MainMenuState mainMenu;
+		SettingsState settings;
+		TableRecordState tableRecord;
+		QuestionNameState questionName;
+		DifficultyState difficultyState;
+		PauseState pause;
+		GameOver gameOver;
+		EnterNameState enterName;
 
 		sf::Sprite mainMenuBackgroundSprite;
 	};

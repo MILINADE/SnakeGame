@@ -18,21 +18,21 @@
 			assert(game.gameUIData.totalNumApplesTexture.loadFromFile(RESOURCES_PATH + "\\TotalNumApples.png"));
 			assert(game.gameUIData.wallTexture.loadFromFile(RESOURCES_PATH + "\\Wall.png"));
 
-			assert(game.gameUIData.mainMenuMusic.openFromFile(RESOURCES_PATH + "\\MainMenuMusic.mp3"));
-			assert(game.gameUIData.playStateMusic.openFromFile(RESOURCES_PATH + "\\PlayStateMusic.wav"));
-			assert(game.gameUIData.coinUpBuffer.loadFromFile(RESOURCES_PATH + "\\CoinUp.wav"));
-			assert(game.gameUIData.endGameBuffer.loadFromFile(RESOURCES_PATH + "EndGame.wav"));
-			game.gameUIData.endGame.setBuffer(game.gameUIData.endGameBuffer);
-			game.gameUIData.endGame.setVolume(3.f);
-			game.gameUIData.coinUp.setBuffer(game.gameUIData.coinUpBuffer);
-			game.gameUIData.coinUp.setVolume(0.5f);
-			game.gameUIData.mainMenuMusic.setVolume(0.5f);
-			game.gameUIData.playStateMusic.setVolume(0.4f);
+			assert(game.gameUIData.mainMenu.mainMenuMusic.openFromFile(RESOURCES_PATH + "\\MainMenuMusic.mp3"));
+			assert(game.gameUIData.playState.playStateMusic.openFromFile(RESOURCES_PATH + "\\PlayStateMusic.wav"));
+			assert(game.gameUIData.playState.coinUpBuffer.loadFromFile(RESOURCES_PATH + "\\CoinUp.wav"));
+			assert(game.gameUIData.playState.endGameBuffer.loadFromFile(RESOURCES_PATH + "EndGame.wav"));
+			game.gameUIData.playState.endGame.setBuffer(game.gameUIData.playState.endGameBuffer);
+			game.gameUIData.playState.endGame.setVolume(3.f);
+			game.gameUIData.playState.coinUp.setBuffer(game.gameUIData.playState.coinUpBuffer);
+			game.gameUIData.playState.coinUp.setVolume(0.5f);
+			game.gameUIData.mainMenu.mainMenuMusic.setVolume(0.5f);
+			game.gameUIData.playState.playStateMusic.setVolume(0.4f);
 
 			InitText(game.gameUIData.logoText, game.gameUIData.gameFont, 120, SCREEN_WIDTH / 2.f, SCREEN_HEIGHT / 3.f - 60.f, "Snake");
 			InitText(game.gameUIData.pauseText, game.gameUIData.gameFont, 80, SCREEN_WIDTH / 2.f, SCREEN_HEIGHT / 3.f - 60.f, "Pause");
 			InitText(game.gameUIData.gameOverText, game.gameUIData.gameFont, 120, SCREEN_WIDTH / 2.f, SCREEN_HEIGHT / 3.f - 60.f, "Game Over");
-			game.gameUIData.numEatenAppleText.setFillColor(sf::Color::White);
+			game.gameUIData.playState.numEatenAppleText.setFillColor(sf::Color::White);
 
 			game.gameUIData.mainMenuBackgroundSprite.setTexture(game.gameUIData.mainMenuBackgroundTexture);
 
@@ -45,7 +45,7 @@
 				return a.record > b.record;
 				});
 
-			game.playersData.back().name = game.gameUIData.playerName;
+			game.playersData.back().name = game.gameUIData.enterName.playerName;
 			game.playersData.back().record = game.totalNumApplesEaten;
 
 			game.apple.resize(NUM_APPLES);
@@ -123,10 +123,10 @@
 			game.gameUIData.activeButtonIndex = 0;
 			game.gameUIData.buttons[0].SetActive(true);
 
-			game.gameUIData.playStateMusic.stop();
+			game.gameUIData.playState.playStateMusic.stop();
 
 			if (game.soundOn) {
-				game.gameUIData.mainMenuMusic.play();
+				game.gameUIData.mainMenu.mainMenuMusic.play();
 			}
 
 			SwitchGameState(game, GameState::MainMenu);
@@ -138,19 +138,19 @@
 
 		void StartRecordTableState(Game& game)
 		{
-			game.gameUIData.playerRecordText.resize(NUM_PLAYERS_RECORD);
+			game.gameUIData.tableRecord.playerRecordText.resize(NUM_PLAYERS_RECORD);
 
-			InitText(game.gameUIData.tableRecordsText, game.gameUIData.gameFont, 50, SCREEN_WIDTH / 2.f, SCREEN_HEIGHT / 3.f - 100, "Table record");
+			InitText(game.gameUIData.tableRecord.tableRecordsText, game.gameUIData.gameFont, 50, SCREEN_WIDTH / 2.f, SCREEN_HEIGHT / 3.f - 100, "Table record");
 			
 
 			sf::Text userName;
-			userName.setString(game.gameUIData.userEnteredText.getString());
+			userName.setString(game.gameUIData.enterName.userEnteredText.getString());
 			auto it = std::find_if(game.playersData.begin(), game.playersData.end(), [&userName](const PlayersRecordData& data) {return data.name == userName.getString();});
 
 			if (it != game.playersData.end()) {
 				for (size_t i = 0; i < NUM_PLAYERS_RECORD; i++)
 				{
-					if (game.playersData[i].name == game.gameUIData.userEnteredText.getString()) {
+					if (game.playersData[i].name == game.gameUIData.enterName.userEnteredText.getString()) {
 						game.playersData[i].record = game.totalNumApplesEaten;
 					}
 				}
@@ -163,7 +163,7 @@
 
 			for (size_t i = 0; i < NUM_PLAYERS_RECORD; i++)
 			{
-				InitText(game.gameUIData.playerRecordText[i], game.gameUIData.gameFont, 40, SCREEN_WIDTH / 2.f, SCREEN_HEIGHT / 3.f + i * 40, game.playersData[i].name + "   " + std::to_string(game.playersData[i].record));
+				InitText(game.gameUIData.tableRecord.playerRecordText[i], game.gameUIData.gameFont, 40, SCREEN_WIDTH / 2.f, SCREEN_HEIGHT / 3.f + i * 40, game.playersData[i].name + "   " + std::to_string(game.playersData[i].record));
 			}
 			
 			SwitchGameState(game, GameState::RecordTable);
@@ -175,33 +175,33 @@
 
 		void StartDifficultyLevelState(Game& game)
 		{
-			InitText(game.gameUIData.changeDifficultyLevelText, game.gameUIData.gameFont, 60, SCREEN_WIDTH / 2.f, SCREEN_HEIGHT / 3.f - 50.f, "Select difficulty level");
-			SetTextCenter(game.gameUIData.changeDifficultyLevelText);
+			InitText(game.gameUIData.difficultyState.changeDifficultyLevelText, game.gameUIData.gameFont, 60, SCREEN_WIDTH / 2.f, SCREEN_HEIGHT / 3.f - 50.f, "Select difficulty level");
+			SetTextCenter(game.gameUIData.difficultyState.changeDifficultyLevelText);
 
-			game.gameUIData.difficultyLevelButtons.clear();
+			game.gameUIData.difficultyState.difficultyLevelButtons.clear();
 
 			Button easyLevel;
-			easyLevel.Init("Easy", game.gameUIData.gameFont, 40, { game.gameUIData.changeDifficultyLevelText.getPosition().x, game.gameUIData.changeDifficultyLevelText.getPosition().y + 60 });
-			game.gameUIData.difficultyLevelButtons.push_back(easyLevel);
+			easyLevel.Init("Easy", game.gameUIData.gameFont, 40, { game.gameUIData.difficultyState.changeDifficultyLevelText.getPosition().x, game.gameUIData.difficultyState.changeDifficultyLevelText.getPosition().y + 60 });
+			game.gameUIData.difficultyState.difficultyLevelButtons.push_back(easyLevel);
 
 			Button easierLevel;
 			easierLevel.Init("Easier", game.gameUIData.gameFont, 40, { easyLevel.position.x, easyLevel.position.y + 40 });
-			game.gameUIData.difficultyLevelButtons.push_back(easierLevel);
+			game.gameUIData.difficultyState.difficultyLevelButtons.push_back(easierLevel);
 
 			Button mediumLevel;
 			mediumLevel.Init("Medium", game.gameUIData.gameFont, 40, { easierLevel.position.x, easierLevel.position.y + 40 });
-			game.gameUIData.difficultyLevelButtons.push_back(mediumLevel);
+			game.gameUIData.difficultyState.difficultyLevelButtons.push_back(mediumLevel);
 
 			Button harderLevel;
 			harderLevel.Init("Harder", game.gameUIData.gameFont, 40, { mediumLevel.position.x, mediumLevel.position.y + 40 });
-			game.gameUIData.difficultyLevelButtons.push_back(harderLevel);
+			game.gameUIData.difficultyState.difficultyLevelButtons.push_back(harderLevel);
 
 			Button hardLevel;
 			hardLevel.Init("Hard", game.gameUIData.gameFont, 40, { harderLevel.position.x, harderLevel.position.y + 40 });
-			game.gameUIData.difficultyLevelButtons.push_back(hardLevel);
+			game.gameUIData.difficultyState.difficultyLevelButtons.push_back(hardLevel);
 
 			game.gameUIData.activeButtonIndex = 0;
-			game.gameUIData.difficultyLevelButtons[0].SetActive(true);
+			game.gameUIData.difficultyState.difficultyLevelButtons[0].SetActive(true);
 
 			SwitchGameState(game, GameState::DifficultyLevel);
 		}
@@ -212,7 +212,7 @@
 		void StartPlayState(Game& game)
 		{
 			if (game.soundOn) {
-				game.gameUIData.playStateMusic.play();
+				game.gameUIData.playState.playStateMusic.play();
 			}
 			
 			
@@ -239,15 +239,15 @@
 				game.rewardSize = 5;
 				break;
 			}
-			game.gameUIData.numAppleUI.setTexture(game.gameUIData.appleTexture);
-			game.gameUIData.numAppleUI.setScale(0.5f, 0.5f);
-			SetSpriteRelativeOrigin(game.gameUIData.numAppleUI, 0.5f, 0.5f);
-			game.gameUIData.numAppleUI.setPosition(16, 25);
+			game.gameUIData.playState.numAppleUI.setTexture(game.gameUIData.appleTexture);
+			game.gameUIData.playState.numAppleUI.setScale(0.5f, 0.5f);
+			SetSpriteRelativeOrigin(game.gameUIData.playState.numAppleUI, 0.5f, 0.5f);
+			game.gameUIData.playState.numAppleUI.setPosition(16, 25);
 
-			game.gameUIData.totalNumApplesSprite.setTexture(game.gameUIData.totalNumApplesTexture);
-			game.gameUIData.totalNumApplesSprite.setScale(0.09f, 0.09f);
-			SetSpriteRelativeOrigin(game.gameUIData.totalNumApplesSprite, 0.5f, 0.5f);
-			game.gameUIData.totalNumApplesSprite.setPosition(game.gameUIData.numAppleUI.getPosition().x + 60.f, game.gameUIData.numAppleUI.getPosition().y + 2);
+			game.gameUIData.playState.totalNumApplesSprite.setTexture(game.gameUIData.totalNumApplesTexture);
+			game.gameUIData.playState.totalNumApplesSprite.setScale(0.09f, 0.09f);
+			SetSpriteRelativeOrigin(game.gameUIData.playState.totalNumApplesSprite, 0.5f, 0.5f);
+			game.gameUIData.playState.totalNumApplesSprite.setPosition(game.gameUIData.playState.numAppleUI.getPosition().x + 60.f, game.gameUIData.playState.numAppleUI.getPosition().y + 2);
 
 			//Init playfield grid
 			for (size_t row = 0; row < 15; row++)
@@ -282,39 +282,40 @@
 
 			game.numApplesEaten = 0;
 
-			game.gameUIData.mainMenuMusic.stop();
+			game.gameUIData.mainMenu.mainMenuMusic.stop();
 
 			START_TO_MOVE = 3;
-			InitText(game.gameUIData.timeToStartMove, game.gameUIData.gameFont, 40, SCREEN_WIDTH / 2.f + 45, SCREEN_HEIGHT / 2.f, "Start of movement" + std::to_string(START_TO_MOVE));
-			SetTextCenter(game.gameUIData.timeToStartMove);
+			InitText(game.gameUIData.playState.timeToStartMove, game.gameUIData.gameFont, 40, SCREEN_WIDTH / 2.f + 45, SCREEN_HEIGHT / 2.f, "Start of movement" + std::to_string(START_TO_MOVE));
+			SetTextCenter(game.gameUIData.playState.timeToStartMove);
 
 			SwitchGameState(game, GameState::Play);
 		}
 		void UpdatePlayingState(Game& game, float deltaTime)
 		{
-			InitText(game.gameUIData.numEatenAppleText, game.gameUIData.gameFont, 25, 40, 27, "- " + std::to_string(game.numApplesEaten));
-			InitText(game.gameUIData.totalNumApplesText, game.gameUIData.gameFont, 25, game.gameUIData.numEatenAppleText.getPosition().x + 60, game.gameUIData.numEatenAppleText.getPosition().y, "- " + std::to_string(game.totalNumApplesEaten));
+			InitText(game.gameUIData.playState.numEatenAppleText, game.gameUIData.gameFont, 25, 40, 27, "- " + std::to_string(game.numApplesEaten));
+			InitText(game.gameUIData.playState.totalNumApplesText, game.gameUIData.gameFont, 25, game.gameUIData.playState.numEatenAppleText.getPosition().x + 60, game.gameUIData.playState.numEatenAppleText.getPosition().y, "- " + std::to_string(game.totalNumApplesEaten));
 
 			if (START_TO_MOVE >= PAUSE_TO_START_MOVE) {
 				START_TO_MOVE -= deltaTime;
-				game.gameUIData.timeToStartMove.setString("Start of movement " + std::to_string((int)START_TO_MOVE));
+				game.gameUIData.playState.timeToStartMove.setString("Start of movement " + std::to_string((int)START_TO_MOVE));
 			}
 			else
 			{
-				if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
+				if (sf::Keyboard::isKeyPressed(sf::Keyboard::D) && game.player.direction != PlayerDirection::Left) {
 					game.player.SetPlayerDirection(game.player, PlayerDirection::Right);
 				}
-				else if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
+				else if (sf::Keyboard::isKeyPressed(sf::Keyboard::W) && game.player.direction != PlayerDirection::Down) {
 					game.player.SetPlayerDirection(game.player, PlayerDirection::Up);
 				}
-				else if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
+				else if (sf::Keyboard::isKeyPressed(sf::Keyboard::A) && game.player.direction != PlayerDirection::Right) {
 					game.player.SetPlayerDirection(game.player, PlayerDirection::Left);
 				}
-				else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
+				else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S) && game.player.direction != PlayerDirection::Up) {
 					game.player.SetPlayerDirection(game.player, PlayerDirection::Down);
 				}
 
 				game.player.UpdatePlayer(game.player, deltaTime, game);
+
 
 				if (!DoShapeCollide(game.player.GetPlayerCollider(game.player), GetWindowCollide())) {
 					StartGameOverState(game);
@@ -323,7 +324,7 @@
 				for (auto& wall : game.wall) {
 					if (DoShapeCollide(game.player.GetPlayerCollider(game.player), wall.GetWallCollider(wall))) {
 						if (game.effectsOn) {
-							game.gameUIData.endGame.play();
+							game.gameUIData.playState.endGame.play();
 						}
 						StartGameOverState(game);
 					}
@@ -332,7 +333,7 @@
 				for (auto& apple : game.apple) {
 					if (DoShapeCollide(game.player.GetPlayerCollider(game.player), apple.GetAppleCollider(apple))) {
 						if (game.effectsOn) {
-							game.gameUIData.coinUp.play();
+							game.gameUIData.playState.coinUp.play();
 						}
 						apple.isAppleEaten = true;
 						game.numApplesEaten += game.rewardSize;
@@ -367,7 +368,7 @@
 				for (auto& segment : game.player.tail) {
 					if (DoShapeCollide(segment.GetTailCollider(segment), game.player.GetPlayerCollider(game.player))) {
 						if (game.effectsOn) {
-							game.gameUIData.endGame.play();
+							game.gameUIData.playState.endGame.play();
 						}
 						StartGameOverState(game);
 					}
@@ -388,13 +389,13 @@
 
 			//InitText(game.gameUIData.numEatenAppleText, game.gameUIData.gameFont, 40 , exitToMenu.position.x, exitToMenu.position.y + 40.f, "Your score: " + std::to_string(game.numApplesEaten));
 
-			game.gameUIData.playerRecordText.resize(NUM_PLAYERS_RECORD);
-			InitText(game.gameUIData.tableRecordsText, game.gameUIData.gameFont, 50, SCREEN_WIDTH / 2.f, SCREEN_HEIGHT / 3.f + 10, "Table record");
-			game.gameUIData.tableRecordsText.setFillColor(sf::Color::Black);
+			game.gameUIData.tableRecord.playerRecordText.resize(NUM_PLAYERS_RECORD);
+			InitText(game.gameUIData.tableRecord.tableRecordsText, game.gameUIData.gameFont, 50, SCREEN_WIDTH / 2.f, SCREEN_HEIGHT / 3.f + 10, "Table record");
+			game.gameUIData.tableRecord.tableRecordsText.setFillColor(sf::Color::Black);
 
 			for (size_t i = 0; i < NUM_PLAYERS_RECORD; i++)
 			{
-				if (game.playersData[i].name == game.gameUIData.userEnteredText.getString()) {
+				if (game.playersData[i].name == game.gameUIData.enterName.userEnteredText.getString()) {
 					game.playersData[i].record = game.totalNumApplesEaten;
 				}
 			}
@@ -403,8 +404,8 @@
 
 			for (size_t i = 0; i < NUM_PLAYERS_RECORD; i++)
 			{
-				InitText(game.gameUIData.playerRecordText[i], game.gameUIData.gameFont, 40, SCREEN_WIDTH / 2.f, SCREEN_HEIGHT / 3.f + 50 + i * 40, game.playersData[i].name + "   " + std::to_string(game.playersData[i].record));
-				game.gameUIData.playerRecordText[i].setFillColor(sf::Color::Black);
+				InitText(game.gameUIData.tableRecord.playerRecordText[i], game.gameUIData.gameFont, 40, SCREEN_WIDTH / 2.f, SCREEN_HEIGHT / 3.f + 50 + i * 40, game.playersData[i].name + "   " + std::to_string(game.playersData[i].record));
+				game.gameUIData.tableRecord.playerRecordText[i].setFillColor(sf::Color::Black);
 			}
 
 			game.gameUIData.activeButtonIndex = 1;
@@ -445,25 +446,25 @@
 
 		void StartPopUpQuestionEnterNameState(Game& game)
 		{
-			game.gameUIData.questionEnterNameButtons.clear();
+			game.gameUIData.questionName.questionEnterNameButtons.clear();
 			
 			Button yesButton;
 			yesButton.Init("Yes", game.gameUIData.gameFont, 40, { SCREEN_WIDTH / 2.f,SCREEN_HEIGHT / 2.f });
-			game.gameUIData.questionEnterNameButtons.push_back(yesButton);
+			game.gameUIData.questionName.questionEnterNameButtons.push_back(yesButton);
 
 			Button noButton;
 			noButton.Init("No", game.gameUIData.gameFont, 40, { SCREEN_WIDTH / 2.f,SCREEN_HEIGHT / 2.f + 40 });
-			game.gameUIData.questionEnterNameButtons.push_back(noButton);
+			game.gameUIData.questionName.questionEnterNameButtons.push_back(noButton);
 
-			InitText(game.gameUIData.questionEnterPlayerNameText, game.gameUIData.gameFont, 40, SCREEN_WIDTH / 2.f, SCREEN_HEIGHT / 2.f - 40, "Enter player name?");
-			SetTextCenter(game.gameUIData.questionEnterPlayerNameText);
+			InitText(game.gameUIData.questionName.questionEnterPlayerNameText, game.gameUIData.gameFont, 40, SCREEN_WIDTH / 2.f, SCREEN_HEIGHT / 2.f - 40, "Enter player name?");
+			SetTextCenter(game.gameUIData.questionName.questionEnterPlayerNameText);
 
-			game.gameUIData.questionEnterPlayerNameBox.setSize({ 300.f, 150.f });
-			game.gameUIData.questionEnterPlayerNameBox.setFillColor(sf::Color::Green);
-			game.gameUIData.questionEnterPlayerNameBox.setPosition(SCREEN_WIDTH / 2.f - 150.f, SCREEN_HEIGHT / 2.f - 75.f);
+			game.gameUIData.questionName.questionEnterPlayerNameBox.setSize({ 300.f, 150.f });
+			game.gameUIData.questionName.questionEnterPlayerNameBox.setFillColor(sf::Color::Green);
+			game.gameUIData.questionName.questionEnterPlayerNameBox.setPosition(SCREEN_WIDTH / 2.f - 150.f, SCREEN_HEIGHT / 2.f - 75.f);
 
 			game.gameUIData.activeButtonIndex = 0;
-			game.gameUIData.questionEnterNameButtons[0].SetActive(true);
+			game.gameUIData.questionName.questionEnterNameButtons[0].SetActive(true);
 
 			SwitchGameState(game, GameState::PopUpQuestionEnterName);
 		}
@@ -473,12 +474,12 @@
 
 		void StartPopUpEnterNameState(Game& game)
 		{
-			InitText(game.gameUIData.userEnteredText, game.gameUIData.gameFont, 40, SCREEN_WIDTH / 2.f, SCREEN_HEIGHT / 2.f, "Enter your name");
-			game.gameUIData.userEnteredText.setFillColor(sf::Color::Red);
+			InitText(game.gameUIData.enterName.userEnteredText, game.gameUIData.gameFont, 40, SCREEN_WIDTH / 2.f, SCREEN_HEIGHT / 2.f, "Enter your name");
+			game.gameUIData.enterName.userEnteredText.setFillColor(sf::Color::Red);
 
-			game.gameUIData.enterNameBox.setSize({ 300.f, 150.f });
-			game.gameUIData.enterNameBox.setFillColor(sf::Color::Green);
-			game.gameUIData.enterNameBox.setPosition(SCREEN_WIDTH / 2.f - 150.f, SCREEN_HEIGHT / 2.f - 75.f);
+			game.gameUIData.enterName.enterNameBox.setSize({ 300.f, 150.f });
+			game.gameUIData.enterName.enterNameBox.setFillColor(sf::Color::Green);
+			game.gameUIData.enterName.enterNameBox.setPosition(SCREEN_WIDTH / 2.f - 150.f, SCREEN_HEIGHT / 2.f - 75.f);
 
 			SwitchGameState(game, GameState::PopUpEnterName);
 		}
@@ -488,38 +489,38 @@
 
 		void StartSettingState(Game& game)
 		{
-			game.gameUIData.settingsButtons.clear();
-			InitText(game.gameUIData.settingsText, game.gameUIData.gameFont, 50, game.gameUIData.logoText.getPosition().x, game.gameUIData.logoText.getPosition().y + 70.f, "Settings");
+			game.gameUIData.settings.settingsButtons.clear();
+			InitText(game.gameUIData.settings.settingsText, game.gameUIData.gameFont, 50, game.gameUIData.logoText.getPosition().x, game.gameUIData.logoText.getPosition().y + 70.f, "Settings");
 
 			Button soundOn;
-			soundOn.Init("Music", game.gameUIData.gameFont, 40, {game.gameUIData.settingsText.getPosition().x, game.gameUIData.settingsText.getPosition().y + 60});
-			game.gameUIData.settingsButtons.push_back(soundOn);
+			soundOn.Init("Music", game.gameUIData.gameFont, 40, {game.gameUIData.settings.settingsText.getPosition().x, game.gameUIData.settings.settingsText.getPosition().y + 60});
+			game.gameUIData.settings.settingsButtons.push_back(soundOn);
 
 			Button effetsOn;
 			effetsOn.Init("Sound", game.gameUIData.gameFont, 40, { soundOn.position.x, soundOn.position.y + 40 });
-			game.gameUIData.settingsButtons.push_back(effetsOn);
+			game.gameUIData.settings.settingsButtons.push_back(effetsOn);
 
 			game.gameUIData.activeButtonIndex = 0;
-			game.gameUIData.settingsButtons[game.gameUIData.activeButtonIndex].SetActive(true);
+			game.gameUIData.settings.settingsButtons[game.gameUIData.activeButtonIndex].SetActive(true);
 
-			InitText(game.gameUIData.soundOntext, game.gameUIData.gameFont, 40, soundOn.position.x + 70.f, soundOn.position.y, "On");
-			InitText(game.gameUIData.effectsOntext, game.gameUIData.gameFont, 40, effetsOn.position.x + 70.f, effetsOn.position.y, "On");
+			InitText(game.gameUIData.settings.soundOntext, game.gameUIData.gameFont, 40, soundOn.position.x + 70.f, soundOn.position.y, "On");
+			InitText(game.gameUIData.settings.effectsOntext, game.gameUIData.gameFont, 40, effetsOn.position.x + 70.f, effetsOn.position.y, "On");
 
 			SwitchGameState(game, GameState::Settings);
 		}
 		void UpdateSettingState(Game& game)
 		{
 			if (game.soundOn) {
-				game.gameUIData.soundOntext.setString("On");
+				game.gameUIData.settings.soundOntext.setString("On");
 			}
 			else{
-				game.gameUIData.soundOntext.setString("Off");
+				game.gameUIData.settings.soundOntext.setString("Off");
 			}
 			if (game.effectsOn) {
-				game.gameUIData.effectsOntext.setString("On");
+				game.gameUIData.settings.effectsOntext.setString("On");
 			}
 			else{
-				game.gameUIData.effectsOntext.setString("Off");
+				game.gameUIData.settings.effectsOntext.setString("Off");
 			}
 		}
 
@@ -531,114 +532,31 @@
 		void DrawGame(Game& game, sf::RenderWindow& window)
 		{
 			if (CurrentGameState(game) == GameState::MainMenu) {
-				window.draw(game.gameUIData.mainMenuBackgroundSprite);
-				window.draw(game.gameUIData.logoText);
-				for (auto& button : game.gameUIData.buttons) {
-					button.Draw(window);
-				}
+				game.gameUIData.mainMenu.DrawMainMenu(game, window);
 			}
 			if (CurrentGameState(game) == GameState::RecordTable) {
-				window.draw(game.gameUIData.mainMenuBackgroundSprite);
-				window.draw(game.gameUIData.tableRecordsText);
-				for (auto& player : game.gameUIData.playerRecordText) {
-					player.setFillColor(sf::Color::White);
-					window.draw(player);
-				}
+				game.gameUIData.tableRecord.DrawTableRecordState(game, window);
 			}
 			if (CurrentGameState(game) == GameState::DifficultyLevel) {
-				window.draw(game.gameUIData.mainMenuBackgroundSprite);
-				window.draw(game.gameUIData.changeDifficultyLevelText);
-				for (auto& button : game.gameUIData.difficultyLevelButtons) {
-					button.Draw(window);
-				}
+				game.gameUIData.difficultyState.DrawDifficultyState(game,window);
 			}
 			if (CurrentGameState(game) == GameState::Settings) {
-				window.draw(game.gameUIData.mainMenuBackgroundSprite);
-				window.draw(game.gameUIData.logoText);
-				window.draw(game.gameUIData.settingsText);
-				window.draw(game.gameUIData.soundOntext);
-				window.draw(game.gameUIData.effectsOntext);
-				for (auto& button : game.gameUIData.settingsButtons) {
-					button.Draw(window);
-				}
+				game.gameUIData.settings.DrawSettingsState(game, window);
 			}
 			if (CurrentGameState(game) == GameState::Play || CurrentGameState(game) == GameState::Pause) {
-				window.draw(game.gameUIData.numAppleUI);
-				window.draw(game.gameUIData.numEatenAppleText);
-				window.draw(game.gameUIData.totalNumApplesSprite);
-				window.draw(game.gameUIData.totalNumApplesText);
-				
-
-				for (size_t row = 0; row < 15; row++) {
-					for (size_t col = 0; col < 15; col++)
-					{
-						window.draw(game.playField[row][col]);
-					}
-				}
-
-				for (auto& apples : game.apple) {
-					if (!apples.isAppleEaten) {
-						apples.Draw(window);
-					}
-				}
-
-				for (auto& walls : game.wall) {
-					walls.Draw(window);
-				}
-
-				if (START_TO_MOVE > PAUSE_TO_START_MOVE) {
-					window.draw(game.gameUIData.timeToStartMove);
-				}
-
-				game.player.DrawPlayer(game.player,window);
+				game.gameUIData.playState.DrawPlayState(game, window);
 			}
 			if (CurrentGameState(game) == GameState::Pause) {
-				for (auto& button : game.gameUIData.pauseButtons) {
-					button.Draw(window);
-				}
-
-				window.draw(game.gameUIData.pauseText);
+				game.gameUIData.pause.DrawPauseState(game, window);
 			}
 			if (CurrentGameState(game) == GameState::GameOver) {
-				for (size_t row = 0; row < 15; row++) {
-					for (size_t col = 0; col < 15; col++)
-					{
-						window.draw(game.playField[row][col]);
-					}
-				}
-				for (auto& apples : game.apple) {
-					if (!apples.isAppleEaten) {
-						apples.Draw(window);
-					}
-				}
-				for (auto& walls : game.wall) {
-					walls.Draw(window);
-				}
-				game.player.DrawPlayer(game.player, window);
-
-				for (auto& button : game.gameUIData.gameOverButtons) {
-					button.Draw(window);
-				}
-
-				window.draw(game.gameUIData.tableRecordsText);
-				for (auto& player : game.gameUIData.playerRecordText) {
-					player.setFillColor(sf::Color::White);
-					window.draw(player);
-				}
-				window.draw(game.gameUIData.gameOverText);
-				
-
+				game.gameUIData.gameOver.DrawGameOverState(game, window);
 			}
 			if (CurrentGameState(game) == GameState::PopUpQuestionEnterName) {
-				window.draw(game.gameUIData.questionEnterPlayerNameBox);
-				window.draw(game.gameUIData.questionEnterPlayerNameText);
-				for (auto& button : game.gameUIData.questionEnterNameButtons) {
-					button.Draw(window);
-				}
+				game.gameUIData.questionName.DrawQuestionNameState(game, window);
 			}
 			if (CurrentGameState(game) == GameState::PopUpEnterName) {
-				window.draw(game.gameUIData.enterNameBox);
-				window.draw(game.gameUIData.userEnteredText);
+				game.gameUIData.enterName.DrawEnterNameState(game, window);
 			}
 			window.display();
 		}
@@ -664,7 +582,7 @@
 		{
 			for (size_t i = 0; i < NUM_PLAYERS_RECORD; i++)
 			{
-				if (game.playersData[i].name == game.gameUIData.userEnteredText.getString()) {
+				if (game.playersData[i].name == game.gameUIData.enterName.userEnteredText.getString()) {
 					return true;
 				}
 			}

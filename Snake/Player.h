@@ -50,7 +50,7 @@ namespace Snake
 
 		std::vector <TailSegment> tail;
 		std::vector <PreviousPosition> prevPosition;
-
+		
 		void InitPlayer(Player& player, const Game& game);
 		void SetPlayerDirection(Player& player, PlayerDirection direction);
 		void UpdatePlayer(Player& player, float deltaTime, Game& game);

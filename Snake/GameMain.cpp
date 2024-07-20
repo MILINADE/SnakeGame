@@ -88,11 +88,11 @@ int main()
                         case 0:
                             if (game.soundOn) {
                                 game.soundOn = false;
-                                game.gameUIData.mainMenuMusic.stop();
+                                game.gameUIData.mainMenu.mainMenuMusic.stop();
                             }
                             else {
                                 game.soundOn = true;
-                                game.gameUIData.mainMenuMusic.play();
+                                game.gameUIData.mainMenu.mainMenuMusic.play();
                             }
                             break;
                         case 1:
@@ -135,7 +135,7 @@ int main()
                         }
                     }
                     else if (CurrentGameState(game) == GameState::PopUpEnterName) {
-                        game.playersData.back().name = game.gameUIData.userEnteredText.getString();
+                        game.playersData.back().name = game.gameUIData.enterName.userEnteredText.getString();
                         StartGameOverState(game);
                     }
                 }
@@ -179,14 +179,14 @@ int main()
                     switch (event.key.code)
                     {
                     case sf::Keyboard::W:
-                        game.gameUIData.difficultyLevelButtons[game.gameUIData.activeButtonIndex].SetActive(false);
-                        game.gameUIData.activeButtonIndex = (game.gameUIData.activeButtonIndex - 1 + static_cast<int>(game.gameUIData.difficultyLevelButtons.size())) % static_cast<int>(game.gameUIData.difficultyLevelButtons.size());
-                        game.gameUIData.difficultyLevelButtons[game.gameUIData.activeButtonIndex].SetActive(true);
+                        game.gameUIData.difficultyState.difficultyLevelButtons[game.gameUIData.activeButtonIndex].SetActive(false);
+                        game.gameUIData.activeButtonIndex = (game.gameUIData.activeButtonIndex - 1 + static_cast<int>(game.gameUIData.difficultyState.difficultyLevelButtons.size())) % static_cast<int>(game.gameUIData.difficultyState.difficultyLevelButtons.size());
+                        game.gameUIData.difficultyState.difficultyLevelButtons[game.gameUIData.activeButtonIndex].SetActive(true);
                         break;
                     case sf::Keyboard::S:
-                        game.gameUIData.difficultyLevelButtons[game.gameUIData.activeButtonIndex].SetActive(false);
-                        game.gameUIData.activeButtonIndex = (game.gameUIData.activeButtonIndex + 1 + static_cast<int>(game.gameUIData.difficultyLevelButtons.size())) % static_cast<int>(game.gameUIData.difficultyLevelButtons.size());
-                        game.gameUIData.difficultyLevelButtons[game.gameUIData.activeButtonIndex].SetActive(true);
+                        game.gameUIData.difficultyState.difficultyLevelButtons[game.gameUIData.activeButtonIndex].SetActive(false);
+                        game.gameUIData.activeButtonIndex = (game.gameUIData.activeButtonIndex + 1 + static_cast<int>(game.gameUIData.difficultyState.difficultyLevelButtons.size())) % static_cast<int>(game.gameUIData.difficultyState.difficultyLevelButtons.size());
+                        game.gameUIData.difficultyState.difficultyLevelButtons[game.gameUIData.activeButtonIndex].SetActive(true);
                         break;
                     case sf::Keyboard::B:
                         StartMainMenu(game);
@@ -197,14 +197,14 @@ int main()
                     switch (event.key.code)
                     {
                     case sf::Keyboard::W:
-                        game.gameUIData.settingsButtons[game.gameUIData.activeButtonIndex].SetActive(false);
-                        game.gameUIData.activeButtonIndex = (game.gameUIData.activeButtonIndex - 1 + static_cast<int>(game.gameUIData.settingsButtons.size())) % static_cast<int>(game.gameUIData.settingsButtons.size());
-                        game.gameUIData.settingsButtons[game.gameUIData.activeButtonIndex].SetActive(true);
+                        game.gameUIData.settings.settingsButtons[game.gameUIData.activeButtonIndex].SetActive(false);
+                        game.gameUIData.activeButtonIndex = (game.gameUIData.activeButtonIndex - 1 + static_cast<int>(game.gameUIData.settings.settingsButtons.size())) % static_cast<int>(game.gameUIData.settings.settingsButtons.size());
+                        game.gameUIData.settings.settingsButtons[game.gameUIData.activeButtonIndex].SetActive(true);
                         break;
                     case sf::Keyboard::S:
-                        game.gameUIData.settingsButtons[game.gameUIData.activeButtonIndex].SetActive(false);
-                        game.gameUIData.activeButtonIndex = (game.gameUIData.activeButtonIndex + 1 + static_cast<int>(game.gameUIData.settingsButtons.size())) % static_cast<int>(game.gameUIData.settingsButtons.size());
-                        game.gameUIData.settingsButtons[game.gameUIData.activeButtonIndex].SetActive(true);
+                        game.gameUIData.settings.settingsButtons[game.gameUIData.activeButtonIndex].SetActive(false);
+                        game.gameUIData.activeButtonIndex = (game.gameUIData.activeButtonIndex + 1 + static_cast<int>(game.gameUIData.settings.settingsButtons.size())) % static_cast<int>(game.gameUIData.settings.settingsButtons.size());
+                        game.gameUIData.settings.settingsButtons[game.gameUIData.activeButtonIndex].SetActive(true);
                         break;
                     case sf::Keyboard::B:
                         StartMainMenu(game);
@@ -251,14 +251,14 @@ int main()
                     switch (event.key.code)
                     {
                     case sf::Keyboard::W:
-                        game.gameUIData.questionEnterNameButtons[game.gameUIData.activeButtonIndex].SetActive(false);
-                        game.gameUIData.activeButtonIndex = (game.gameUIData.activeButtonIndex - 1 + static_cast<int>(game.gameUIData.questionEnterNameButtons.size())) % static_cast<int>(game.gameUIData.questionEnterNameButtons.size());
-                        game.gameUIData.questionEnterNameButtons[game.gameUIData.activeButtonIndex].SetActive(true);
+                        game.gameUIData.questionName.questionEnterNameButtons[game.gameUIData.activeButtonIndex].SetActive(false);
+                        game.gameUIData.activeButtonIndex = (game.gameUIData.activeButtonIndex - 1 + static_cast<int>(game.gameUIData.questionName.questionEnterNameButtons.size())) % static_cast<int>(game.gameUIData.questionName.questionEnterNameButtons.size());
+                        game.gameUIData.questionName.questionEnterNameButtons[game.gameUIData.activeButtonIndex].SetActive(true);
                         break;
                     case sf::Keyboard::S:
-                        game.gameUIData.questionEnterNameButtons[game.gameUIData.activeButtonIndex].SetActive(false);
-                        game.gameUIData.activeButtonIndex = (game.gameUIData.activeButtonIndex + 1 + static_cast<int>(game.gameUIData.questionEnterNameButtons.size())) % static_cast<int>(game.gameUIData.questionEnterNameButtons.size());
-                        game.gameUIData.questionEnterNameButtons[game.gameUIData.activeButtonIndex].SetActive(true);
+                        game.gameUIData.questionName.questionEnterNameButtons[game.gameUIData.activeButtonIndex].SetActive(false);
+                        game.gameUIData.activeButtonIndex = (game.gameUIData.activeButtonIndex + 1 + static_cast<int>(game.gameUIData.questionName.questionEnterNameButtons.size())) % static_cast<int>(game.gameUIData.questionName.questionEnterNameButtons.size());
+                        game.gameUIData.questionName.questionEnterNameButtons[game.gameUIData.activeButtonIndex].SetActive(true);
                         break;
                     }
                 }
@@ -273,13 +273,13 @@ int main()
             if (CurrentGameState(game) == GameState::PopUpEnterName) {
                 if (event.type == sf::Event::TextEntered) {
                     if (event.text.unicode < 128 && event.text.unicode != '\b') {
-                        game.gameUIData.enteredText += static_cast<char>(event.text.unicode);
-                        game.gameUIData.userEnteredText.setString(game.gameUIData.enteredText);
+                        game.gameUIData.enterName.enteredText += static_cast<char>(event.text.unicode);
+                        game.gameUIData.enterName.userEnteredText.setString(game.gameUIData.enterName.enteredText);
                     }
                     else if (event.text.unicode == '\b') {
-                        if (!game.gameUIData.enteredText.empty()) {
-                            game.gameUIData.enteredText.pop_back();
-                            game.gameUIData.userEnteredText.setString(game.gameUIData.enteredText);
+                        if (!game.gameUIData.enterName.enteredText.empty()) {
+                            game.gameUIData.enterName.enteredText.pop_back();
+                            game.gameUIData.enterName.userEnteredText.setString(game.gameUIData.enterName.enteredText);
                         }
                     }
                 }

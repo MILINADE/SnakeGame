@@ -21,6 +21,7 @@ namespace Snake
 
 		prevPosition.push_back({ player.position, player.direction });
 	}
+		
 	void Player::SetPlayerDirection(Player& player, PlayerDirection direction)
 	{
 		player.direction = direction;
@@ -31,6 +32,7 @@ namespace Snake
 			TIME_TO_MOVE += deltaTime;
 		}
 		else {
+
 			switch (player.direction)
 			{
 			case PlayerDirection::Right:
@@ -48,10 +50,10 @@ namespace Snake
 			}
 
 			prevPosition.resize(tail.size());
-			prevPosition.push_back({player.position, player.direction});
+			prevPosition.push_back({ player.position, player.direction });
+
 			TIME_TO_MOVE = 0;
 			
-
 			if (!tail.empty()) {
 				for (size_t i = 0; i < tail.size(); i++)
 				{
